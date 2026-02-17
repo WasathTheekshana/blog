@@ -1,26 +1,93 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Dark terminal theme (default) */
+:root,
+[data-theme="dark"] {
+  --background: #0d1117;
+  --foreground: #c9d1d9;
+  --terminal-green: #3fb950;
+  --terminal-cyan: #58a6ff;
+  --terminal-yellow: #d29922;
+  --terminal-red: #f85149;
+  --terminal-purple: #a371f7;
+  --terminal-gray: #8b949e;
+  --terminal-border: #30363d;
+  --terminal-surface: #161b22;
+}
+
+/* Light terminal theme */
+[data-theme="light"] {
+  --background: #f6f8fa;
+  --foreground: #24292f;
+  --terminal-green: #1a7f37;
+  --terminal-cyan: #0969da;
+  --terminal-yellow: #9a6700;
+  --terminal-red: #cf222e;
+  --terminal-purple: #8250df;
+  --terminal-gray: #57606a;
+  --terminal-border: #d0d7de;
+  --terminal-surface: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-terminal-green: var(--terminal-green);
+  --color-terminal-cyan: var(--terminal-cyan);
+  --color-terminal-yellow: var(--terminal-yellow);
+  --color-terminal-red: var(--terminal-red);
+  --color-terminal-purple: var(--terminal-purple);
+  --color-terminal-gray: var(--terminal-gray);
+  --color-terminal-border: var(--terminal-border);
+  --color-terminal-surface: var(--terminal-surface);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Terminal cursor blink animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Selection color */
+::selection {
+  background: var(--terminal-green);
+  color: var(--background);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--terminal-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--terminal-gray);
+}
+
+/* Smooth transitions for theme elements */
+*,
+*::before,
+*::after {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
