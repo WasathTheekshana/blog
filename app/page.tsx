@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
+import { getBasicInfo } from "@/lib/about";
 import { PostCard } from "@/components/blog/PostCard";
 
 export default function HomePage() {
   const posts = getAllPosts().slice(0, 3);
+  const info = getBasicInfo();
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
@@ -13,17 +15,27 @@ export default function HomePage() {
         </div>
         <div className="border border-[var(--terminal-border)] bg-[var(--terminal-surface)] p-6">
           <h1 className="text-2xl text-[var(--terminal-green)] mb-2">
-            Welcome to my blog<span className="cursor-blink">_</span>
+            {info.name}<span className="cursor-blink">_</span>
           </h1>
-          <p className="text-[var(--terminal-gray)] leading-relaxed">
-            Thoughts, ideas, and stories about technology and life.
+          <p className="text-[var(--terminal-cyan)] text-sm mb-3">
+            {info.title}
           </p>
-          <div className="mt-4 text-sm">
-            <span className="text-[var(--terminal-yellow)]">status:</span>{" "}
-            <span className="text-[var(--terminal-green)]">online</span>
-            <span className="mx-3 text-[var(--terminal-border)]">|</span>
-            <span className="text-[var(--terminal-yellow)]">posts:</span>{" "}
-            <span className="text-[var(--terminal-cyan)]">{posts.length}</span>
+          <p className="text-[var(--terminal-gray)] leading-relaxed">
+            {info.tagline}
+          </p>
+          <div className="mt-4 text-sm flex flex-wrap gap-4">
+            <span>
+              <span className="text-[var(--terminal-yellow)]">status:</span>{" "}
+              <span className="text-[var(--terminal-green)]">online</span>
+            </span>
+            <span>
+              <span className="text-[var(--terminal-yellow)]">location:</span>{" "}
+              <span className="text-[var(--terminal-gray)]">{info.location}</span>
+            </span>
+            <span>
+              <span className="text-[var(--terminal-yellow)]">posts:</span>{" "}
+              <span className="text-[var(--terminal-cyan)]">{posts.length}</span>
+            </span>
           </div>
         </div>
       </section>

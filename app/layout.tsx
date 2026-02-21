@@ -3,6 +3,7 @@ import { Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { getSiteConfig } from "@/lib/about";
 import "./globals.css";
 
 const geistMono = Geist_Mono({
@@ -10,12 +11,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteConfig = getSiteConfig();
+
 export const metadata: Metadata = {
   title: {
-    default: "~/blog",
-    template: "%s | ~/blog",
+    default: siteConfig.siteName,
+    template: `%s | ${siteConfig.siteName}`,
   },
-  description: "My personal blog",
+  description: siteConfig.siteDescription,
 };
 
 export default function RootLayout({

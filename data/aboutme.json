@@ -1,0 +1,61 @@
+{
+  "name": "Wasath Theekshana",
+  "username": "wasathlk",
+  "title": "DevOps Engineer | Security Researcher",
+  "tagline": "Thoughts, ideas, and stories about technology and life.",
+  "bio": "A DevOps engineer who builds scalable pipelines and create terraform code after breaking whole companys' infrastructure by running a terraform destroy",
+  "location": "Colombo, Sri Lanka",
+  "email": "wasath.vt@gmail.com",
+  "avatar": "/images/avatar.png",
+  "education": [
+    {
+      "degree": "Masters of Science in Cyber Security",
+      "institution": "University of Staffordshire",
+      "year": "2025",
+      "description": "Digital Forensics, Ethical Hacking"
+    },
+    {
+      "degree": "Bachelor of Science in Software Engineering",
+      "institution": "University of Plymouth",
+      "year": "2020",
+      "description": "Focused on software engineering and web development"
+    }
+  ],
+  "experience": [
+    {
+      "role": "DevOps Engineer",
+      "company": "NEXT",
+      "period": "2020 - Present",
+      "description": "Handeling IaC (Terraform), Managing Azure Cloud Resouces"
+    }
+  ],
+  "skills": [
+    "Terraform",
+    "K8S",
+    "Typescript",
+    "React",
+    "Next.js",
+    "Node.js",
+    "Python",
+    "Git"
+  ],
+  "interests": [
+    "DevOps",
+    "Offensive Security",
+    "Cloud Infrastructure",
+    "Open Source",
+    "Tech Writing",
+    "Learning New Technologies"
+  ],
+  "social": {
+    "github": "https://github.com/WasathTheekshana",
+    "instagram": "https://instagram.com/wasath.theeekshana",
+    "linkedin": "https://linkedin.com/in/wasathlk",
+    "website": "https://wasath.site"
+  },
+  "siteConfig": {
+    "siteName": "~/blog",
+    "siteDescription": "My personal blog",
+    "copyright": "All rights reserved."
+  }
+}

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useTheme } from "@/components/ThemeProvider";
+import aboutData from "@/data/aboutme.json";
 
 export function Header() {
   const { theme, toggleTheme, mounted } = useTheme();
@@ -13,7 +14,7 @@ export function Header() {
           href="/"
           className="text-[var(--terminal-green)] hover:text-[var(--terminal-cyan)] transition-colors"
         >
-          <span className="text-[var(--terminal-gray)]">visitor@blog</span>
+          <span className="text-[var(--terminal-gray)]">{aboutData.username}@blog</span>
           <span className="text-[var(--terminal-green)]">:</span>
           <span className="text-[var(--terminal-cyan)]">~</span>
           <span className="text-[var(--terminal-green)]">$</span>
@@ -31,6 +32,12 @@ export function Header() {
             className="text-[var(--terminal-gray)] hover:text-[var(--terminal-green)] transition-colors"
           >
             [blog]
+          </Link>
+          <Link
+            href="/about"
+            className="text-[var(--terminal-gray)] hover:text-[var(--terminal-green)] transition-colors"
+          >
+            [about]
           </Link>
           <button
             onClick={toggleTheme}
