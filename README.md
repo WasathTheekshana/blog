@@ -1,36 +1,237 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ~/blog
+
+<div align="center">
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                                                              │
+│   ██████╗ ██╗      ██████╗  ██████╗                         │
+│   ██╔══██╗██║     ██╔═══██╗██╔════╝                         │
+│   ██████╔╝██║     ██║   ██║██║  ███╗                        │
+│   ██╔══██╗██║     ██║   ██║██║   ██║                        │
+│   ██████╔╝███████╗╚██████╔╝╚██████╔╝                        │
+│   ╚═════╝ ╚══════╝ ╚═════╝  ╚═════╝                         │
+│                                                              │
+│   A terminal-themed personal blog built with Next.js        │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
+
+[![CI/CD](https://github.com/WasathTheekshana/blog/actions/workflows/ci.yml/badge.svg)](https://github.com/WasathTheekshana/blog/actions/workflows/ci.yml)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+
+[Live Demo](https://blog.wasath.site) | [Report Bug](https://github.com/WasathTheekshana/blog/issues)
+
+</div>
+
+---
+
+## Features
+
+```bash
+$ ls -la ./features
+```
+
+- **Terminal Aesthetic** - Dark/light theme with terminal-inspired UI
+- **MDX Support** - Write blog posts in MDX with custom components
+- **Syntax Highlighting** - Code blocks styled like terminal output
+- **Responsive Design** - Works on all devices
+- **SEO Optimized** - Meta tags and structured data
+- **Fast Performance** - Static generation with Next.js
+- **CI/CD Pipeline** - Automated testing and deployment
+
+---
+
+## Tech Stack
+
+```bash
+$ cat ./stack.json
+```
+
+| Category | Technology |
+|----------|------------|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript |
+| Styling | Tailwind CSS 4 |
+| Content | MDX |
+| Deployment | Vercel |
+| CI/CD | GitHub Actions |
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+$ node --version
+v20.x.x
+
+$ yarn --version
+1.22.x
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Clone the repository
+$ git clone https://github.com/WasathTheekshana/blog.git
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Navigate to project directory
+$ cd blog
 
-## Learn More
+# Install dependencies
+$ yarn install
 
-To learn more about Next.js, take a look at the following resources:
+# Start development server
+$ yarn dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Open [http://localhost:3000](http://localhost:3000) to view the blog.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+$ tree -L 2
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+blog/
+├── app/                    # Next.js app router pages
+│   ├── about/              # About page
+│   ├── blog/               # Blog listing & posts
+│   ├── globals.css         # Global styles
+│   ├── layout.tsx          # Root layout
+│   └── page.tsx            # Home page
+├── components/             # React components
+│   ├── blog/               # Blog-specific components
+│   ├── layout/             # Header, Footer
+│   └── ThemeProvider.tsx   # Dark/light theme
+├── content/
+│   └── posts/              # MDX blog posts
+├── data/
+│   └── aboutme.json        # Personal information
+├── lib/                    # Utility functions
+├── types/                  # TypeScript types
+└── public/                 # Static assets
+```
+
+---
+
+## Writing Blog Posts
+
+Create a new `.mdx` file in `content/posts/`:
+
+```bash
+$ touch content/posts/my-new-post.mdx
+```
+
+Add frontmatter and content:
+
+```mdx
+---
+title: "My New Post"
+description: "A brief description"
+date: "2024-02-21"
+tags: ["devops", "terraform"]
+published: true
+author: "Wasath Theekshana"
+---
+
+Your content here...
+```
+
+---
+
+## Customization
+
+### Personal Information
+
+Edit `data/aboutme.json` to update your profile:
+
+```bash
+$ vim data/aboutme.json
+```
+
+### Theme Colors
+
+Modify CSS variables in `app/globals.css`:
+
+```css
+/* Dark theme */
+[data-theme="dark"] {
+  --terminal-green: #3fb950;
+  --terminal-cyan: #58a6ff;
+  /* ... */
+}
+
+/* Light theme */
+[data-theme="light"] {
+  --terminal-green: #1a7f37;
+  --terminal-cyan: #0969da;
+  /* ... */
+}
+```
+
+---
+
+## Available Scripts
+
+```bash
+$ yarn dev          # Start development server
+$ yarn build        # Build for production
+$ yarn start        # Start production server
+$ yarn lint         # Run ESLint
+$ yarn typecheck    # Run TypeScript checks
+```
+
+---
+
+## Deployment
+
+### Vercel (Recommended)
+
+The project includes a CI/CD pipeline that automatically deploys to Vercel.
+
+**Required Secrets:**
+
+```bash
+VERCEL_TOKEN       # Vercel API token
+VERCEL_ORG_ID      # Organization ID
+VERCEL_PROJECT_ID  # Project ID
+```
+
+Get these by running:
+
+```bash
+$ vercel link
+$ cat .vercel/project.json
+```
+
+---
+
+## License
+
+```bash
+$ cat LICENSE
+```
+
+MIT License - feel free to use this for your own blog!
+
+---
+
+<div align="center">
+
+```
+┌─────────────────────────────────────┐
+│  Made with ♥ by Wasath Theekshana  │
+│                                     │
+│  $ echo "Happy coding!"            │
+└─────────────────────────────────────┘
+```
+
+</div>
