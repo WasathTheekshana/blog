@@ -26,14 +26,14 @@ export function Footer() {
                 [github]
               </Link>
             )}
-            {social.twitter && (
+            {social.instagram && (
               <Link
-                href={social.twitter}
+                href={social.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-[var(--terminal-cyan)] transition-colors"
               >
-                [twitter]
+                [instagram]
               </Link>
             )}
             {social.linkedin && (
