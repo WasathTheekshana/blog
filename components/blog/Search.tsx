@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -32,60 +32,59 @@ interface SearchProps {
 
 export function Search({ posts, isOpen, onClose }: SearchProps) {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResult[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
+  const prevQueryRef = useRef(query);
 
-  const searchPosts = useCallback(
-    (searchQuery: string): SearchResult[] => {
-      if (!searchQuery.trim()) return [];
+  const results = useMemo((): SearchResult[] => {
+    if (!query.trim()) return [];
 
-      const lowerQuery = searchQuery.toLowerCase();
-      const matched: SearchResult[] = [];
+    const lowerQuery = query.toLowerCase();
+    const matched: SearchResult[] = [];
 
-      posts.forEach((post) => {
-        // Check title
-        if (post.title.toLowerCase().includes(lowerQuery)) {
-          matched.push({ ...post, matchType: "title" });
-          return;
-        }
+    posts.forEach((post) => {
+      // Check title
+      if (post.title.toLowerCase().includes(lowerQuery)) {
+        matched.push({ ...post, matchType: "title" });
+        return;
+      }
 
-        // Check tags
-        if (post.tags.some((tag) => tag.toLowerCase().includes(lowerQuery))) {
-          matched.push({ ...post, matchType: "tag" });
-          return;
-        }
+      // Check tags
+      if (post.tags.some((tag) => tag.toLowerCase().includes(lowerQuery))) {
+        matched.push({ ...post, matchType: "tag" });
+        return;
+      }
 
-        // Check description
-        if (post.description.toLowerCase().includes(lowerQuery)) {
-          matched.push({ ...post, matchType: "description" });
-          return;
-        }
+      // Check description
+      if (post.description.toLowerCase().includes(lowerQuery)) {
+        matched.push({ ...post, matchType: "description" });
+        return;
+      }
 
-        // Check content
-        if (post.content.toLowerCase().includes(lowerQuery)) {
-          matched.push({ ...post, matchType: "content" });
-          return;
-        }
-      });
+      // Check content
+      if (post.content.toLowerCase().includes(lowerQuery)) {
+        matched.push({ ...post, matchType: "content" });
+        return;
+      }
+    });
 
-      return matched.slice(0, 10);
-    },
-    [posts]
-  );
+    return matched.slice(0, 10);
+  }, [query, posts]);
+
+  // Reset selected index when query changes
+  if (prevQueryRef.current !== query) {
+    prevQueryRef.current = query;
+    if (selectedIndex !== 0) {
+      setSelectedIndex(0);
+    }
+  }
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }
   }, [isOpen]);
-
-  useEffect(() => {
-    const results = searchPosts(query);
-    setResults(results);
-    setSelectedIndex(0);
-  }, [query, searchPosts]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
