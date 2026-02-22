@@ -35,7 +35,6 @@ export function Search({ posts, isOpen, onClose }: SearchProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  const prevQueryRef = useRef(query);
 
   const results = useMemo((): SearchResult[] => {
     if (!query.trim()) return [];
@@ -72,13 +71,10 @@ export function Search({ posts, isOpen, onClose }: SearchProps) {
     return matched.slice(0, 10);
   }, [query, posts]);
 
-  // Reset selected index when query changes
-  if (prevQueryRef.current !== query) {
-    prevQueryRef.current = query;
-    if (selectedIndex !== 0) {
-      setSelectedIndex(0);
-    }
-  }
+  const handleQueryChange = (newQuery: string) => {
+    setQuery(newQuery);
+    setSelectedIndex(0);
+  };
 
   useEffect(() => {
     if (isOpen && inputRef.current) {
@@ -129,7 +125,7 @@ export function Search({ posts, isOpen, onClose }: SearchProps) {
               ref={inputRef}
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => handleQueryChange(e.target.value)}
               placeholder="search posts..."
               className="flex-1 bg-transparent text-[var(--foreground)] outline-none placeholder:text-[var(--terminal-gray)]"
               autoComplete="off"
