@@ -57,5 +57,8 @@
     "siteName": "~/blog",
     "siteDescription": "My personal blog",
     "copyright": "All rights reserved."
+  },
+  "verification": {
+    "google": ""
   }
 }

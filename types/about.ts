@@ -26,6 +26,10 @@ export interface SiteConfig {
   copyright: string;
 }
 
+export interface Verification {
+  google?: string;
+}
+
 export interface AboutMe {
   name: string;
   username: string;
@@ -41,4 +45,5 @@ export interface AboutMe {
   interests: string[];
   social: Social;
   siteConfig: SiteConfig;
+  verification?: Verification;
 }
