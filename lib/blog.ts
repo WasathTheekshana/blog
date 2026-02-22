@@ -76,3 +76,34 @@ export function getAllTags(): string[] {
 
   return Array.from(tags).sort();
 }
+
+export interface SearchablePost {
+  slug: string;
+  title: string;
+  description: string;
+  content: string;
+  tags: string[];
+  date: string;
+  readingTime: string;
+}
+
+export function getSearchablePosts(): SearchablePost[] {
+  const slugs = getPostSlugs();
+
+  return slugs
+    .map((slug) => {
+      const post = getPostBySlug(slug);
+      if (!post || post.frontmatter.published === false) return null;
+
+      return {
+        slug: post.slug,
+        title: post.frontmatter.title,
+        description: post.frontmatter.description,
+        content: post.content,
+        tags: post.frontmatter.tags || [],
+        date: post.frontmatter.date,
+        readingTime: post.readingTime,
+      };
+    })
+    .filter((post): post is SearchablePost => post !== null);
+}

@@ -78,14 +78,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
 
         {post.frontmatter.tags && post.frontmatter.tags.length > 0 && (
-          <div className="mt-3 flex gap-2">
+          <div className="mt-3 flex flex-wrap gap-2">
             {post.frontmatter.tags.map((tag) => (
-              <span
+              <Link
                 key={tag}
-                className="text-xs text-[var(--terminal-purple)]"
+                href={`/blog/tag/${encodeURIComponent(tag)}`}
+                className="text-xs text-[var(--terminal-purple)] hover:text-[var(--terminal-cyan)] transition-colors"
               >
                 #{tag}
-              </span>
+              </Link>
             ))}
           </div>
         )}
