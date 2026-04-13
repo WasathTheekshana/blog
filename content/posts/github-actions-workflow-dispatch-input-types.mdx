@@ -69,13 +69,13 @@ counts and timeouts. This prevents mistakes before the pipeline even starts.
 
 Here is a quick reference before we go deep on each one:
 
-| Type | UI widget | Value in shell | Best for |
-|---|---|---|---|
-| `string` | Text field | Any text | Names, tags, messages |
-| `number` | Number field | String - validate yourself | Counts, timeouts, ports |
-| `boolean` | Checkbox | `"true"` or `"false"` | Dry-run, debug flags |
-| `choice` | Dropdown | One of the listed options | Log levels, strategies |
-| `environment` | Dropdown | A GitHub Environment name | Deployment targets |
+| Type          | UI Widget    | Value in Shell                | Best For                      |
+| ------------- | ------------ | ----------------------------- | ----------------------------- |
+| `string`      | Text field   | Any text                      | Names, tags, messages         |
+| `number`      | Number field | String — validate yourself    | Counts, timeouts, ports       |
+| `boolean`     | Checkbox     | `"true"` or `"false"`         | Dry-run, debug flags          |
+| `choice`      | Dropdown     | One of the listed options     | Log levels, strategies        |
+| `environment` | Dropdown     | A GitHub Environment name     | Deployment targets            |
 
 One important note before we start: **all input types arrive in shell scripts
 as strings**, even `boolean` and `number`. GitHub does the UI-level validation,
@@ -156,15 +156,11 @@ Your script is the last line of defence.
 
 ---
 
-{/* SCREENSHOT: Show the GitHub Actions "Run workflow" form for 01-string-input.yml */}
-{/* Suggested: Show the three text fields (app_name, version_tag, deploy_message)  */}
-{/* before clicking "Run workflow"                                                  */}
+![Run Workflow from the string input](/github-actions-workflow-dispatch-input-types/1.png)
 
 ---
 
-{/* SCREENSHOT: Show the job log output for the string input workflow              */}
-{/* Suggested: Capture the terminal output showing the semver validation result    */}
-{/* and the deploy message box - run it with version_tag set to "v1.2.3"          */}
+![Log output of the string input](/github-actions-workflow-dispatch-input-types/2.png)
 
 ---
 
@@ -242,13 +238,12 @@ fi
 
 ---
 
-{/* SCREENSHOT: Show the "Run workflow" form for 02-number-input.yml             */}
-{/* Suggested: Show the two number fields with default values filled in          */}
+![Run Workflow from the number input](/github-actions-workflow-dispatch-input-types/3.png)
 
 ---
 
-{/* SCREENSHOT: Show the job log output with the boundary check passing          */}
-{/* Suggested: Run with replica_count=1 to show the HA warning message          */}
+
+![Run Workflow from the number input](/github-actions-workflow-dispatch-input-types/4.png)
 
 ---
 
@@ -353,19 +348,11 @@ changing any code.
 
 ---
 
-{/* SCREENSHOT: Show the "Run workflow" form for 03-boolean-input.yml           */}
-{/* Suggested: Show the three checkboxes - capture with dry_run checked         */}
+![Run Workflow from the bool input](/github-actions-workflow-dispatch-input-types/5.png)
 
 ---
 
-{/* SCREENSHOT: Show the job log with dry_run=true output                       */}
-{/* Suggested: The "[SIMULATED]" lines in the script output make this clear     */}
-
----
-
-{/* SCREENSHOT: Show the conditional steps in the workflow run summary          */}
-{/* Suggested: Show the step list where "Real deployment" is skipped and        */}
-{/* "Dry run summary" runs - visible in the GitHub Actions run detail page      */}
+![Run Workflow from the bool input](/github-actions-workflow-dispatch-input-types/6.png)
 
 ---
 
@@ -468,15 +455,11 @@ echo "Format: ${LOG_FORMAT}, Retention: ${LOG_RETENTION_DAYS} days"
 
 ---
 
-{/* SCREENSHOT: Show the "Run workflow" form for 04-choice-input.yml            */}
-{/* Suggested: Open both dropdowns one at a time and capture them showing       */}
-{/* the available options (debug/info/warn/error and the four strategies)       */}
+![Run Workflow from the choice input](/github-actions-workflow-dispatch-input-types/7.png)
 
 ---
 
-{/* SCREENSHOT: Show the job log output for the choice workflow                 */}
-{/* Suggested: Run with log_level=debug and deployment_strategy=canary          */}
-{/* to show the canary traffic weight output and the summary table at the end   */}
+![Run Workflow from the choice input](/github-actions-workflow-dispatch-input-types/8.png)
 
 ---
 
@@ -543,28 +526,11 @@ and it is entirely driven by the `environment` input type combined with the
 
 ---
 
-{/* SCREENSHOT: Show the GitHub repo Settings - Environments page               */}
-{/* Suggested: Navigate to Settings > Environments and show the three           */}
-{/* environments (development, staging, production) listed                      */}
+![Run Workflow from the env input](/github-actions-workflow-dispatch-input-types/9.png)
 
 ---
 
-{/* SCREENSHOT: Show the "Run workflow" form for 05-environment-input.yml       */}
-{/* Suggested: Show the environment dropdown open with the three environments   */}
-{/* visible as options                                                           */}
-
----
-
-{/* SCREENSHOT: Show the production environment approval gate                   */}
-{/* Suggested: Trigger the workflow with target_environment=production and      */}
-{/* capture the "Waiting for review" state in the job detail page               */}
-{/* This is one of the most visually impressive things to show in the article   */}
-
----
-
-{/* SCREENSHOT: Show the job log output after approval                          */}
-{/* Suggested: Capture the environment-specific config output from the script   */}
-{/* showing the production settings (5 replicas, warn log level, etc.)          */}
+![Run Workflow from the env input](/github-actions-workflow-dispatch-input-types/9.png)
 
 ---
 
@@ -623,9 +589,7 @@ For workflow 05 (environment input), you need to create the environments first:
 
 ---
 
-{/* SCREENSHOT: Show the Actions tab of the repo with all 5 workflows listed    */}
-{/* Suggested: Capture the left sidebar of the Actions tab showing the five     */}
-{/* workflow names - this gives readers a clear picture of the repo structure   */}
+![All the workflow files](/github-actions-workflow-dispatch-input-types/11.png)
 
 ---
 
