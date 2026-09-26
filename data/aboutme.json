@@ -51,7 +51,9 @@
     "github": "https://github.com/WasathTheekshana",
     "instagram": "https://instagram.com/wasath.theeekshana",
     "linkedin": "https://linkedin.com/in/wasathlk",
-    "website": "https://wasath.site"
+    "website": "https://wasath.site",
+    "gpg": "https://github.com/WasathTheekshana.gpg",
+    "gpgFingerprint": "9749 CC4F 66B3 2498 6BE1 1E91 D4D8 256B 2F48 9EA7"
   },
   "siteConfig": {
     "siteName": "~/blog",

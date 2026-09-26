@@ -18,6 +18,8 @@ export interface Social {
   website?: string;
   instagram?: string;
   youtube?: string;
+  gpg?: string;
+  gpgFingerprint?: string;
 }
 
 export interface SiteConfig {
