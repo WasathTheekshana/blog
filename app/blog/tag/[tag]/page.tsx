@@ -7,82 +7,65 @@ interface TagPageProps {
 }
 
 export async function generateStaticParams() {
-  const tags = getAllTags();
-  return tags.map((tag) => ({ tag: encodeURIComponent(tag) }));
+  return getAllTags().map((tag) => ({ tag: encodeURIComponent(tag) }));
 }
 
 export async function generateMetadata({ params }: TagPageProps) {
   const { tag } = await params;
-  const decodedTag = decodeURIComponent(tag);
-
-  return {
-    title: `#${decodedTag}`,
-    description: `Posts tagged with ${decodedTag}`,
-  };
+  const decoded = decodeURIComponent(tag);
+  return { title: `#${decoded}`, description: `Posts tagged with ${decoded}` };
 }
 
 export default async function TagPage({ params }: TagPageProps) {
   const { tag } = await params;
-  const decodedTag = decodeURIComponent(tag);
-  const posts = getPostsByTag(decodedTag);
+  const decoded = decodeURIComponent(tag);
+  const posts = getPostsByTag(decoded);
   const allTags = getAllTags();
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <Link
-          href="/blog"
-          className="text-[var(--terminal-gray)] hover:text-[var(--terminal-green)] text-sm transition-colors"
-        >
-          <span className="text-[var(--terminal-green)]">$</span> cd /blog
-        </Link>
-      </div>
+    <div className="max-w-4xl mx-auto px-4 py-10">
+      <nav aria-label="Breadcrumb" className="mb-4 text-sm">
+        <ol className="flex items-center gap-2 text-muted" role="list">
+          <li><Link href="/" className="underline underline-offset-4 inline-flex items-center min-h-8">Home</Link></li>
+          <li aria-hidden="true">/</li>
+          <li><Link href="/blog" className="underline underline-offset-4 inline-flex items-center min-h-8">Blog</Link></li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" className="text-ink">#{decoded}</li>
+        </ol>
+      </nav>
 
-      <div className="mb-8">
-        <div className="text-[var(--terminal-gray)] text-sm mb-4">
-          <span className="text-[var(--terminal-green)]">$</span> grep -r &quot;{decodedTag}&quot; ./posts
-        </div>
-        <div className="border border-[var(--terminal-border)] bg-[var(--terminal-surface)] p-4">
-          <h1 className="text-xl text-[var(--terminal-purple)]">
-            #{decodedTag}
-          </h1>
-          <p className="text-sm text-[var(--terminal-gray)] mt-1">
-            {posts.length} post{posts.length !== 1 ? "s" : ""} found
-          </p>
-        </div>
-      </div>
+      <header className="mb-8">
+        <h1 className="text-3xl font-semibold">
+          <span className="text-pink">#</span>{decoded}
+        </h1>
+        <p className="mt-2 text-muted">
+          {posts.length} post{posts.length === 1 ? "" : "s"} with this tag
+        </p>
+      </header>
 
-      {/* Other tags */}
-      <div className="mb-8">
-        <div className="text-[var(--terminal-gray)] text-xs mb-2">
-          <span className="text-[var(--terminal-green)]">$</span> ls ./tags
-        </div>
-        <div className="flex flex-wrap gap-2">
+      <section aria-labelledby="tags-heading" className="mb-8">
+        <h2 id="tags-heading" className="text-sm text-muted mb-2">All tags</h2>
+        <ul className="flex flex-wrap gap-2" role="list">
           {allTags.map((t) => (
-            <Link
-              key={t}
-              href={`/blog/tag/${encodeURIComponent(t)}`}
-              className={`text-xs px-2 py-1 border transition-colors ${
-                t === decodedTag
-                  ? "border-[var(--terminal-purple)] text-[var(--terminal-purple)] bg-[var(--terminal-surface)]"
-                  : "border-[var(--terminal-border)] text-[var(--terminal-gray)] hover:border-[var(--terminal-purple)] hover:text-[var(--terminal-purple)]"
-              }`}
-            >
-              #{t}
-            </Link>
+            <li key={t}>
+              <Link
+                href={`/blog/tag/${encodeURIComponent(t)}`}
+                className="tag"
+                aria-current={t === decoded ? "page" : undefined}
+              >
+                #{t}
+              </Link>
+            </li>
           ))}
-        </div>
-      </div>
+        </ul>
+      </section>
 
-      {/* Posts */}
       {posts.length === 0 ? (
-        <div className="border border-[var(--terminal-border)] bg-[var(--terminal-surface)] p-4 text-[var(--terminal-gray)]">
-          <span className="text-[var(--terminal-yellow)]">warning:</span> no posts found with tag &quot;{decodedTag}&quot;
-        </div>
+        <p className="card text-muted">No posts use the tag &ldquo;{decoded}&rdquo;.</p>
       ) : (
         <div className="space-y-4">
-          {posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
+          {posts.map((post, i) => (
+            <PostCard key={post.slug} post={post} index={i} />
           ))}
         </div>
       )}

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import aboutData from "@/data/aboutme.json";
 
-const siteUrl = aboutData.social.website || "https://blog.wasath.site";
+// The blog lives on its own subdomain; social.website is the portfolio site, not this one.
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://blog.wasath.site").replace(/\/$/, "");
 
 export const siteConfig = {
   name: aboutData.name,

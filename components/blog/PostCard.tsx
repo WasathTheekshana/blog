@@ -1,59 +1,44 @@
 import Link from "next/link";
 import type { PostMeta } from "@/types/blog";
 
-interface PostCardProps {
-  post: PostMeta;
-}
-
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, index = 0 }: { post: PostMeta; index?: number }) {
   const { slug, frontmatter, readingTime } = post;
+  const date = new Date(frontmatter.date);
 
   return (
-    <article className="group border border-[var(--terminal-border)] bg-[var(--terminal-surface)] p-4 transition-all hover:border-[var(--terminal-green)] hover:shadow-[0_0_10px_rgba(63,185,80,0.1)]">
-      <div className="flex items-center gap-2 text-xs text-[var(--terminal-gray)] mb-2">
-        <span className="text-[var(--terminal-green)]">$</span>
-        <span>cat</span>
-        <span className="text-[var(--terminal-cyan)]">{slug}.mdx</span>
-      </div>
+    <article className="card rise" style={{ "--i": index } as React.CSSProperties}>
+      <p className="prompt mb-1" aria-hidden="true">
+        <b>$</b> cat {slug}.mdx
+      </p>
 
-      <div className="pl-4 border-l-2 border-[var(--terminal-border)]">
-        <Link href={`/blog/${slug}`}>
-          <h2 className="text-lg text-[var(--terminal-green)] group-hover:text-[var(--terminal-cyan)] transition-colors cursor-pointer">
-            {frontmatter.title}
-          </h2>
+      <h2 className="text-xl font-semibold leading-snug">
+        <Link href={`/blog/${slug}`} className="card-link">
+          {frontmatter.title}
         </Link>
-        <p className="mt-1 text-sm text-[var(--terminal-gray)] line-clamp-2">
-          {frontmatter.description}
-        </p>
+      </h2>
 
-        <div className="mt-3 flex items-center gap-4 text-xs text-[var(--terminal-gray)]">
-          <span>
-            <span className="text-[var(--terminal-yellow)]">date:</span>{" "}
-            {new Date(frontmatter.date).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
-          </span>
-          <span>
-            <span className="text-[var(--terminal-yellow)]">read:</span> {readingTime}
-          </span>
-        </div>
+      <p className="reading mt-2 text-muted leading-relaxed line-clamp-3">{frontmatter.description}</p>
 
-        {frontmatter.tags && frontmatter.tags.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-2">
-            {frontmatter.tags.map((tag) => (
-              <Link
-                key={tag}
-                href={`/blog/tag/${encodeURIComponent(tag)}`}
-                className="text-xs text-[var(--terminal-purple)] hover:text-[var(--terminal-cyan)] transition-colors"
-              >
+      <p className="mt-3 text-sm text-muted">
+        <time dateTime={frontmatter.date}>
+          {date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })}
+        </time>
+        <span aria-hidden="true"> · </span>
+        <span className="sr-only">, </span>
+        {readingTime}
+      </p>
+
+      {frontmatter.tags && frontmatter.tags.length > 0 ? (
+        <ul className="mt-3 flex flex-wrap gap-2" role="list" aria-label="Tags">
+          {frontmatter.tags.map((tag) => (
+            <li key={tag}>
+              <Link href={`/blog/tag/${encodeURIComponent(tag)}`} className="tag tag-link">
                 #{tag}
               </Link>
-            ))}
-          </div>
-        )}
-      </div>
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </article>
   );
 }

@@ -5,11 +5,20 @@ import { siteConfig } from "@/lib/seo";
 import { PostCard } from "@/components/blog/PostCard";
 import { WebsiteJsonLd, PersonJsonLd } from "@/components/seo/JsonLd";
 
+const ASCII = [
+  "██╗    ██╗ █████╗ ███████╗ █████╗ ████████╗██╗  ██╗",
+  "██║    ██║██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██║  ██║",
+  "██║ █╗ ██║███████║███████╗███████║   ██║   ███████║",
+  "██║███╗██║██╔══██║╚════██║██╔══██║   ██║   ██╔══██║",
+  "╚███╔███╔╝██║  ██║███████║██║  ██║   ██║   ██║  ██║",
+  " ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝",
+];
+
 export default function HomePage() {
-  const posts = getAllPosts().slice(0, 3);
+  const all = getAllPosts();
+  const posts = all.slice(0, 3);
   const info = getBasicInfo();
   const about = getAboutMe();
-
   const socialLinks = Object.values(about.social).filter(Boolean) as string[];
 
   return (
@@ -24,58 +33,36 @@ export default function HomePage() {
         sameAs={socialLinks}
       />
 
-      <div className="max-w-4xl mx-auto px-4 py-12">
-        <section className="mb-16" aria-labelledby="intro-heading">
-          <div className="text-[var(--terminal-gray)] text-sm mb-4">
-            <span className="text-[var(--terminal-green)]">$</span> whoami
-          </div>
-          <div className="border border-[var(--terminal-border)] bg-[var(--terminal-surface)] p-6">
-            <h1 id="intro-heading" className="text-2xl text-[var(--terminal-green)] mb-2">
-              {info.name}<span className="cursor-blink">_</span>
-            </h1>
-            <p className="text-[var(--terminal-cyan)] text-sm mb-3">
-              {info.title}
-            </p>
-            <p className="text-[var(--terminal-gray)] leading-relaxed">
-              {info.tagline}
-            </p>
-            <div className="mt-4 text-sm flex flex-wrap gap-4">
-              <span>
-                <span className="text-[var(--terminal-yellow)]">status:</span>{" "}
-                <span className="text-[var(--terminal-green)]">online</span>
-              </span>
-              <span>
-                <span className="text-[var(--terminal-yellow)]">location:</span>{" "}
-                <span className="text-[var(--terminal-gray)]">{info.location}</span>
-              </span>
-              <span>
-                <span className="text-[var(--terminal-yellow)]">posts:</span>{" "}
-                <span className="text-[var(--terminal-cyan)]">{posts.length}</span>
-              </span>
-            </div>
+      <div className="max-w-4xl mx-auto px-4 py-10">
+        <section aria-labelledby="intro-heading" className="mb-14">
+          <p className="prompt mb-3" aria-hidden="true"><b>$</b> whoami</p>
+          <div className="card !border-l-[3px]">
+            <pre className="ascii mb-4" aria-hidden="true">{ASCII.join("\n")}</pre>
+            <h1 id="intro-heading" className="text-2xl font-semibold">{info.name}</h1>
+            <p className="text-accent-ink mt-1">{info.title}</p>
+            <p className="reading text-lg leading-relaxed mt-3 max-w-[60ch]">{info.tagline}</p>
+            <dl className="mt-5 flex flex-wrap gap-x-8 gap-y-2 text-sm">
+              <div className="flex gap-2"><dt className="text-hot">Location</dt><dd>{info.location}</dd></div>
+              <div className="flex gap-2"><dt className="text-hot">Posts</dt><dd>{all.length}</dd></div>
+            </dl>
           </div>
         </section>
 
         <section aria-labelledby="posts-heading">
-          <div className="flex items-center justify-between mb-6">
-            <h2 id="posts-heading" className="text-[var(--terminal-gray)] text-sm">
-              <span className="text-[var(--terminal-green)]">$</span> ls -la ./posts | head -3
+          <div className="flex flex-wrap items-baseline justify-between gap-3 mb-5">
+            <h2 id="posts-heading" className="text-xl font-semibold">
+              <span className="text-ok" aria-hidden="true">$ </span>Latest posts
             </h2>
-            <Link
-              href="/blog"
-              className="text-[var(--terminal-cyan)] hover:text-[var(--terminal-green)] text-sm transition-colors"
-            >
-              [view all]
+            <Link href="/blog" className="text-link underline underline-offset-4 inline-flex items-center min-h-11">
+              All posts<span className="sr-only"> ({all.length})</span> <span aria-hidden="true">→</span>
             </Link>
           </div>
           {posts.length === 0 ? (
-            <div className="border border-[var(--terminal-border)] bg-[var(--terminal-surface)] p-4 text-[var(--terminal-gray)]">
-              <span className="text-[var(--terminal-yellow)]">warning:</span> no posts found
-            </div>
+            <p className="card text-muted">No posts yet.</p>
           ) : (
             <div className="space-y-4">
-              {posts.map((post) => (
-                <PostCard key={post.slug} post={post} />
+              {posts.map((post, i) => (
+                <PostCard key={post.slug} post={post} index={i} />
               ))}
             </div>
           )}
