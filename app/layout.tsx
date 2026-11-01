@@ -32,7 +32,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="en"
-      data-theme="amber"
+      data-theme="matrix"
       className={`${plexMono.variable} ${plexSans.variable} ${pixel.variable} ${hyper.variable}`}
       suppressHydrationWarning
     >

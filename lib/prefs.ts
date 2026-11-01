@@ -27,10 +27,10 @@ export const PREF_OPTIONS: Record<PrefKey, readonly { id: string; label: string 
   size: SIZES,
 };
 
-export const PREF_DEFAULTS: Record<PrefKey, string> = { theme: "amber", font: "sans", size: "m" };
+export const PREF_DEFAULTS: Record<PrefKey, string> = { theme: "matrix", font: "sans", size: "m" };
 
 /**
  * Runs in <head> before first paint so the saved choice never flashes the wrong theme.
- * With nothing saved it follows the OS: high contrast first, then light, else the amber terminal.
+ * With nothing saved it follows the OS: high contrast first, then light, else the green phosphor terminal.
  */
-export const PREFS_BOOT_SCRIPT = `(function(){try{var d=document.documentElement;function g(k){try{return localStorage.getItem("pref-"+k)}catch(e){return null}}var t=g("theme");if(!t){t=matchMedia("(prefers-contrast: more)").matches?"contrast":matchMedia("(prefers-color-scheme: light)").matches?"paper":"amber"}d.dataset.theme=t;d.dataset.font=g("font")||"sans";d.dataset.size=g("size")||"m"}catch(e){}})();`;
+export const PREFS_BOOT_SCRIPT = `(function(){try{var d=document.documentElement;function g(k){try{return localStorage.getItem("pref-"+k)}catch(e){return null}}var t=g("theme");if(!t){t=matchMedia("(prefers-contrast: more)").matches?"contrast":matchMedia("(prefers-color-scheme: light)").matches?"paper":"matrix"}d.dataset.theme=t;d.dataset.font=g("font")||"sans";d.dataset.size=g("size")||"m"}catch(e){}})();`;

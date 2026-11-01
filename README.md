@@ -34,7 +34,7 @@
 $ ls -la ./features
 ```
 
-- **Terminal Aesthetic** - Five colour themes (amber, paper, green phosphor, dracula, high contrast) matching my portfolio terminal
+- **Terminal Aesthetic** - Five colour themes (green phosphor by default, plus amber, paper, dracula, high contrast) matching my portfolio terminal
 - **MDX Support** - Write blog posts in MDX with custom components
 - **Code Blocks** - Styled like a terminal window, keyboard scrollable, with a copy button
 - **Accessible by default** - Skip link, landmarks, one h1 per page, visible focus, a keyboard-operable search dialog, and a table of contents on long posts. Body text meets WCAG AAA contrast in every theme. Readers can change theme, font (sans, mono, Atkinson Hyperlegible) and text size from the Display menu. Motion is off when the OS asks for less. Layouts reflow down to 320px even at 150% text.
