@@ -1,0 +1,64 @@
+---
+title: "Rebuilding My Terminal Portfolio in Next.js"
+description: "My portfolio is a fake terminal. I moved it from Vite to Next.js 16 and kept the idea: type commands, get my work. Here is how it works and what broke on the way."
+date: "2026-11-01"
+tags: ["nextjs", "react", "portfolio", "typescript", "seo"]
+published: true
+author: "Wasath Theekshana"
+---
+
+My portfolio has never been a normal portfolio. You land on a black screen with a prompt, type `projects`, and get a list of what I have built. No hero section, no scroll animations, no "Hi, I'm Wasath" in forty-pixel type.
+
+The first version was a Vite app driven by a `config.json`. It worked, but it was a single client-side bundle with an empty HTML shell, so Google saw almost nothing, and every project was a hand-edited JSON entry that went stale the moment I pushed something new. I rewrote it in Next.js 16 with React 19 and TypeScript. The idea is the same. The internals are not.
+
+## Commands are data, not a switch statement
+
+Every command lives in one registry. A command is a name, a description and a function that returns React. `skills` returns a table, `projects` returns a list of cards, `theme dracula` changes the theme and returns a confirmation line.
+
+Because the output is a React node and not a string, a command can return anything: links you can click, bars that fill in, a block of ASCII art. Adding a command means adding one entry to the registry. Help, tab completion and the suggestion hints all read from the same list, so none of them can drift out of sync with the commands that actually exist.
+
+The terminal component itself only does three jobs. It keeps the history, it reads the input, and it asks the registry what to print.
+
+## Projects and posts come from live sources
+
+The old site had my projects typed out by hand. Now the server fetches my public repos from the GitHub API and my latest posts from this blog's feed, and Next caches the result for an hour. Star counts and recent activity stay current without me touching the portfolio.
+
+I still keep a short curated list for the projects I want pinned, with proper descriptions, because the API returns repo names and one-line blurbs that I wrote years ago in a hurry. The fetch fails quietly: if GitHub is down or rate-limits the server, it returns an empty list and the page still renders instead of showing an error.
+
+## Making it feel like a terminal
+
+There is no animation library in the project. All of it is CSS plus one canvas.
+
+- **Boot sequence.** On load the terminal prints a few fake startup lines before the prompt appears, the way a real machine would.
+- **Tab completion.** Press Tab and it completes the command. While you type, a dim ghost of the closest match sits after your cursor. Arrow up and down walk through history.
+- **Matrix rain.** A canvas behind the text draws falling characters at 24 frames per second. It pauses when the tab is hidden, and it does not run at all if your system asks for reduced motion.
+- **Five themes.** Green phosphor, amber, paper, Dracula and high contrast, all swapped by changing CSS variables on one element. `theme matrix` and the rest work as commands, and the choice sticks.
+- **Easter eggs.** There is a `sudo` prompt that wants a password, and a hidden command that pretends to delete the source. I am not telling you which.
+
+## What broke
+
+Most of the time went on small bugs that only show up when you actually use the thing.
+
+The banner printed twice in development. React StrictMode mounts effects twice on purpose, and my boot sequence was not idempotent, so I added a ref that records whether it already started.
+
+The matrix rain kept its old colours after a theme change. The animation loop read the theme colours once at mount and never looked again. The fix was to make the effect depend on the current theme so it restarts with the new palette.
+
+Clickable command chips ran stale code. A chip captured the `execute` function from the render it was created in, so after a few commands it ran an old copy with old history. Storing the latest function in a ref fixed it.
+
+Tab completion rendered nothing. I was pushing the matching names into the output as a single entry with a prompt hack, and the renderer skipped it. Two separate entries worked.
+
+The social preview image was the strangest one. I wanted my ASCII banner on it, but the box-drawing characters came out as empty rectangles, because the font that Next's image renderer uses has no glyphs for them. I gave up and used a large bold wordmark instead.
+
+## Search engines can read it now
+
+A terminal is a hard thing to index, since the interesting content only appears after someone types. So the page ships real content in the HTML for crawlers, hidden visually but present for screen readers and bots, and the document has proper metadata: a canonical URL, Open Graph and Twitter tags, a generated share image, `robots.txt`, a sitemap and a web manifest.
+
+I also added structured data describing me as a person and the page as a profile, so search results have something to work with beyond the title. On the server side there are security headers (HSTS, `nosniff`, a frame policy and a tight permissions policy).
+
+## What I would do differently
+
+I tried to pull my work history from LinkedIn and it refused to load for a script, so the experience section comes from what I already wrote down myself. If I did this again I would start by writing the data file properly, since everything else depends on it.
+
+The skill bars are my own estimates of how I rate myself, which is a fuzzy thing to put in a progress bar. They make the output look good and I am not sure they say anything useful.
+
+If you want to look around, the site is at [wasath.site](https://wasath.site). Try `help` first. The source is on my GitHub, and it is a good example of how much you can get done with a registry, a few hooks and plain CSS.
