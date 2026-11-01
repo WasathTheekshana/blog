@@ -1,60 +1,46 @@
-import Link from "next/link";
+import { ExternalLink } from "@/components/ui/ExternalLink";
 import aboutData from "@/data/aboutme.json";
 
 export function Footer() {
   const { social } = aboutData;
+  const links = [
+    { href: social.github, label: "GitHub" },
+    { href: social.linkedin, label: "LinkedIn" },
+    { href: social.instagram, label: "Instagram" },
+    { href: social.website, label: "Portfolio terminal" },
+  ].filter((l) => l.href);
 
   return (
-    <footer className="border-t border-[var(--terminal-border)] mt-auto">
-      <div className="max-w-4xl mx-auto px-4 py-6">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-[var(--terminal-gray)]">
-          <p>
-            {social.gpg ? (
-              <Link
-                href={social.gpg}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[var(--terminal-purple)] hover:text-[var(--terminal-green)] transition-colors"
-              >
-                {social.gpgFingerprint}
-              </Link>
-            ) : (
-              <span className="text-[var(--terminal-purple)]">{social.gpgFingerprint}</span>
-            )}
+    <footer className="border-t border-hairline mt-16">
+      <div className="max-w-4xl mx-auto px-4 py-8 grid gap-6 text-sm sm:grid-cols-[1fr_auto] sm:items-start">
+        <div className="space-y-1">
+          <p className="text-muted">
+            {aboutData.siteConfig.copyright} © {new Date().getFullYear()} {aboutData.name}
           </p>
-          <div className="flex gap-4">
-            {social.github && (
-              <Link
-                href={social.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-[var(--terminal-green)] transition-colors"
-              >
-                [github]
-              </Link>
-            )}
-            {social.instagram && (
-              <Link
-                href={social.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-[var(--terminal-cyan)] transition-colors"
-              >
-                [instagram]
-              </Link>
-            )}
-            {social.linkedin && (
-              <Link
-                href={social.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-[var(--terminal-cyan)] transition-colors"
-              >
-                [linkedin]
-              </Link>
-            )}
-          </div>
+          <p>
+            <ExternalLink href={social.gpg} className="text-link underline underline-offset-4 inline-block min-h-8">
+              GPG public key
+            </ExternalLink>
+            <span className="text-muted"> · fingerprint </span>
+            <code className="text-code break-words">{social.gpgFingerprint}</code>
+          </p>
         </div>
+        <nav aria-label="Elsewhere">
+          <ul className="flex flex-wrap gap-x-4" role="list">
+            {links.map((l) => (
+              <li key={l.label}>
+                <ExternalLink href={l.href} me className="text-link underline underline-offset-4 inline-flex items-center min-h-11">
+                  {l.label}
+                </ExternalLink>
+              </li>
+            ))}
+            <li>
+              <a href="/feed.xml" className="text-link underline underline-offset-4 inline-flex items-center min-h-11">
+                RSS feed
+              </a>
+            </li>
+          </ul>
+        </nav>
       </div>
     </footer>
   );

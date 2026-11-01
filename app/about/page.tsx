@@ -3,13 +3,12 @@ import Link from "next/link";
 import { getAboutMe } from "@/lib/about";
 import { siteConfig } from "@/lib/seo";
 import { PersonJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
+import { ExternalLink } from "@/components/ui/ExternalLink";
 
 export const metadata: Metadata = {
   title: "About",
   description: `Learn more about ${siteConfig.author} - ${siteConfig.description}`,
-  alternates: {
-    canonical: `${siteConfig.url}/about`,
-  },
+  alternates: { canonical: `${siteConfig.url}/about` },
   openGraph: {
     title: `About | ${siteConfig.title}`,
     description: `Learn more about ${siteConfig.author}`,
@@ -18,9 +17,26 @@ export const metadata: Metadata = {
   },
 };
 
+function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
+  return (
+    <section aria-labelledby={id} className="card mb-6">
+      <h2 id={id} className="text-lg font-semibold mb-3">
+        <span className="text-ok" aria-hidden="true">$ </span>{title}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
 export default function AboutPage() {
   const about = getAboutMe();
   const socialLinks = Object.values(about.social).filter(Boolean) as string[];
+  const links = [
+    { href: about.social.github, label: "GitHub" },
+    { href: about.social.linkedin, label: "LinkedIn" },
+    { href: about.social.instagram, label: "Instagram" },
+    { href: about.social.website, label: "Portfolio terminal" },
+  ].filter((l): l is { href: string; label: string } => Boolean(l.href));
 
   return (
     <>
@@ -39,193 +55,86 @@ export default function AboutPage() {
         ]}
       />
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <nav aria-label="Breadcrumb" className="mb-4">
-          <ol className="flex items-center gap-2 text-xs text-[var(--terminal-gray)]">
-            <li>
-              <Link href="/" className="hover:text-[var(--terminal-green)]">
-                ~
-              </Link>
-            </li>
-            <li>/</li>
-            <li className="text-[var(--terminal-cyan)]">about</li>
+      <div className="max-w-4xl mx-auto px-4 py-10">
+        <nav aria-label="Breadcrumb" className="mb-4 text-sm">
+          <ol className="flex items-center gap-2 text-muted" role="list">
+            <li><Link href="/" className="underline underline-offset-4 inline-flex items-center min-h-8">Home</Link></li>
+            <li aria-hidden="true">/</li>
+            <li aria-current="page" className="text-ink">About</li>
           </ol>
         </nav>
 
-        <div className="text-[var(--terminal-gray)] text-sm mb-4">
-          <span className="text-[var(--terminal-green)]">$</span> cat ./about.md
-        </div>
-
-        {/* Basic Info */}
-        <section className="border border-[var(--terminal-border)] bg-[var(--terminal-surface)] p-6 mb-6" aria-labelledby="about-heading">
-          <h1 id="about-heading" className="text-2xl text-[var(--terminal-green)] mb-2">
-            {about.name}
-          </h1>
-          <p className="text-[var(--terminal-cyan)] mb-4">{about.title}</p>
-          <p className="text-[var(--terminal-gray)] leading-relaxed">{about.bio}</p>
-
-          <div className="mt-4 pt-4 border-t border-[var(--terminal-border)] grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-            <div>
-              <span className="text-[var(--terminal-yellow)]">location:</span>{" "}
-              <span className="text-[var(--terminal-gray)]">{about.location}</span>
+        <header className="card mb-6">
+          <h1 className="text-3xl font-semibold">{about.name}</h1>
+          <p className="text-accent-ink mt-1">{about.title}</p>
+          <p className="reading text-lg leading-relaxed mt-3 max-w-[62ch]">{about.bio}</p>
+          <dl className="mt-5 grid gap-2 text-sm sm:grid-cols-2">
+            <div className="flex gap-2"><dt className="text-hot">Location</dt><dd>{about.location}</dd></div>
+            <div className="flex gap-2">
+              <dt className="text-hot">Email</dt>
+              <dd><a href={`mailto:${about.email}`} className="text-link underline underline-offset-4">{about.email}</a></dd>
             </div>
-            <div>
-              <span className="text-[var(--terminal-yellow)]">email:</span>{" "}
-              <Link
-                href={`mailto:${about.email}`}
-                className="text-[var(--terminal-cyan)] hover:text-[var(--terminal-green)]"
-              >
-                {about.email}
-              </Link>
-            </div>
-          </div>
-        </section>
+          </dl>
+        </header>
 
-        {/* Skills */}
-        <section className="border border-[var(--terminal-border)] bg-[var(--terminal-surface)] p-6 mb-6" aria-labelledby="skills-heading">
-          <h2 id="skills-heading" className="sr-only">Skills</h2>
-          <div className="text-xs text-[var(--terminal-gray)] mb-3">
-            <span className="text-[var(--terminal-green)]">$</span> echo $SKILLS
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {about.skills.map((skill) => (
-              <span
-                key={skill}
-                className="text-sm border border-[var(--terminal-border)] px-2 py-1 text-[var(--terminal-cyan)]"
-              >
-                {skill}
-              </span>
+        <Section id="skills-heading" title="Skills">
+          <ul className="flex flex-wrap gap-2" role="list">
+            {about.skills.map((s) => (
+              <li key={s} className="tag !text-ink">{s}</li>
             ))}
-          </div>
-        </section>
+          </ul>
+        </Section>
 
-        {/* Experience */}
-        {about.experience.length > 0 && (
-          <section className="border border-[var(--terminal-border)] bg-[var(--terminal-surface)] p-6 mb-6" aria-labelledby="experience-heading">
-            <h2 id="experience-heading" className="sr-only">Experience</h2>
-            <div className="text-xs text-[var(--terminal-gray)] mb-4">
-              <span className="text-[var(--terminal-green)]">$</span> cat ./experience.log
-            </div>
-            <div className="space-y-4">
-              {about.experience.map((exp, index) => (
-                <div
-                  key={index}
-                  className="pl-4 border-l-2 border-[var(--terminal-border)]"
-                >
-                  <h3 className="text-[var(--terminal-green)]">{exp.role}</h3>
-                  <p className="text-sm text-[var(--terminal-cyan)]">{exp.company}</p>
-                  <p className="text-xs text-[var(--terminal-gray)]">{exp.period}</p>
-                  {exp.description && (
-                    <p className="text-sm text-[var(--terminal-gray)] mt-1">
-                      {exp.description}
-                    </p>
-                  )}
-                </div>
+        {about.experience.length > 0 ? (
+          <Section id="experience-heading" title="Experience">
+            <ul className="space-y-4" role="list">
+              {about.experience.map((e) => (
+                <li key={`${e.company}-${e.period}`}>
+                  <h3 className="font-semibold">{e.role} <span className="text-muted font-normal">at</span> {e.company}</h3>
+                  <p className="text-sm text-muted">{e.period}</p>
+                  {e.description ? <p className="reading mt-1">{e.description}</p> : null}
+                </li>
               ))}
-            </div>
-          </section>
-        )}
+            </ul>
+          </Section>
+        ) : null}
 
-        {/* Education */}
-        {about.education.length > 0 && (
-          <section className="border border-[var(--terminal-border)] bg-[var(--terminal-surface)] p-6 mb-6" aria-labelledby="education-heading">
-            <h2 id="education-heading" className="sr-only">Education</h2>
-            <div className="text-xs text-[var(--terminal-gray)] mb-4">
-              <span className="text-[var(--terminal-green)]">$</span> cat ./education.log
-            </div>
-            <div className="space-y-4">
-              {about.education.map((edu, index) => (
-                <div
-                  key={index}
-                  className="pl-4 border-l-2 border-[var(--terminal-border)]"
-                >
-                  <h3 className="text-[var(--terminal-green)]">{edu.degree}</h3>
-                  <p className="text-sm text-[var(--terminal-cyan)]">{edu.institution}</p>
-                  <p className="text-xs text-[var(--terminal-gray)]">{edu.year}</p>
-                  {edu.description && (
-                    <p className="text-sm text-[var(--terminal-gray)] mt-1">
-                      {edu.description}
-                    </p>
-                  )}
-                </div>
+        {about.education.length > 0 ? (
+          <Section id="education-heading" title="Education">
+            <ul className="space-y-4" role="list">
+              {about.education.map((e) => (
+                <li key={`${e.institution}-${e.year}`}>
+                  <h3 className="font-semibold">{e.degree}</h3>
+                  <p>{e.institution}</p>
+                  <p className="text-sm text-muted">{e.year}</p>
+                  {e.description ? <p className="reading mt-1">{e.description}</p> : null}
+                </li>
               ))}
-            </div>
-          </section>
-        )}
+            </ul>
+          </Section>
+        ) : null}
 
-        {/* Interests */}
-        {about.interests.length > 0 && (
-          <section className="border border-[var(--terminal-border)] bg-[var(--terminal-surface)] p-6 mb-6" aria-labelledby="interests-heading">
-            <h2 id="interests-heading" className="sr-only">Interests</h2>
-            <div className="text-xs text-[var(--terminal-gray)] mb-3">
-              <span className="text-[var(--terminal-green)]">$</span> echo $INTERESTS
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {about.interests.map((interest) => (
-                <span
-                  key={interest}
-                  className="text-sm text-[var(--terminal-purple)]"
-                >
-                  #{interest.toLowerCase().replace(/\s+/g, "-")}
-                </span>
+        {about.interests.length > 0 ? (
+          <Section id="interests-heading" title="Interests">
+            <ul className="flex flex-wrap gap-x-4 gap-y-1" role="list">
+              {about.interests.map((i) => (
+                <li key={i} className="text-pink">#{i.toLowerCase().replace(/\s+/g, "-")}</li>
               ))}
-            </div>
-          </section>
-        )}
+            </ul>
+          </Section>
+        ) : null}
 
-        {/* Social Links */}
-        <section className="border border-[var(--terminal-border)] bg-[var(--terminal-surface)] p-6" aria-labelledby="social-heading">
-          <h2 id="social-heading" className="sr-only">Social Links</h2>
-          <div className="text-xs text-[var(--terminal-gray)] mb-3">
-            <span className="text-[var(--terminal-green)]">$</span> cat ./social.json
-          </div>
-          <div className="flex flex-wrap gap-4 text-sm">
-            {about.social.github && (
-              <Link
-                href={about.social.github}
-                target="_blank"
-                rel="noopener noreferrer me"
-                className="text-[var(--terminal-gray)] hover:text-[var(--terminal-green)] transition-colors"
-              >
-                [github]
-              </Link>
-            )}
-            {about.social.instagram && (
-              <Link
-                href={about.social.instagram}
-                target="_blank"
-                rel="noopener noreferrer me"
-                className="text-[var(--terminal-gray)] hover:text-[var(--terminal-cyan)] transition-colors"
-              >
-                [instagram]
-              </Link>
-            )}
-            {about.social.linkedin && (
-              <Link
-                href={about.social.linkedin}
-                target="_blank"
-                rel="noopener noreferrer me"
-                className="text-[var(--terminal-gray)] hover:text-[var(--terminal-cyan)] transition-colors"
-              >
-                [linkedin]
-              </Link>
-            )}
-            {about.social.website && (
-              <Link
-                href={about.social.website}
-                target="_blank"
-                rel="noopener noreferrer me"
-                className="text-[var(--terminal-gray)] hover:text-[var(--terminal-yellow)] transition-colors"
-              >
-                [website]
-              </Link>
-            )}
-          </div>
-        </section>
-
-        <div className="mt-6 text-sm text-[var(--terminal-gray)]">
-          <span className="text-[var(--terminal-green)]">&gt;</span> EOF
-        </div>
+        <Section id="links-heading" title="Find me elsewhere">
+          <ul className="flex flex-wrap gap-x-5" role="list">
+            {links.map((l) => (
+              <li key={l.label}>
+                <ExternalLink href={l.href} me className="text-link underline underline-offset-4 inline-flex items-center min-h-11">
+                  {l.label}
+                </ExternalLink>
+              </li>
+            ))}
+          </ul>
+        </Section>
       </div>
     </>
   );

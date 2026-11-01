@@ -1,100 +1,77 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useTheme } from "@/components/ThemeProvider";
-import { Search } from "@/components/blog/Search";
+import { usePathname } from "next/navigation";
+import { Search, type SearchablePost } from "@/components/blog/Search";
+import { DisplaySettings } from "@/components/layout/DisplaySettings";
 import aboutData from "@/data/aboutme.json";
 
-interface SearchablePost {
-  slug: string;
-  title: string;
-  description: string;
-  content: string;
-  tags: string[];
-  date: string;
-  readingTime: string;
-}
+const LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/blog", label: "Blog" },
+  { href: "/about", label: "About" },
+] as const;
 
-interface HeaderProps {
-  searchPosts?: SearchablePost[];
-}
-
-export function Header({ searchPosts = [] }: HeaderProps) {
-  const { theme, toggleTheme, mounted } = useTheme();
+export function Header({ searchPosts = [] }: { searchPosts?: SearchablePost[] }) {
+  const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setSearchOpen(true);
       }
     };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  return (
-    <>
-      <header className="border-b border-[var(--terminal-border)]">
-        <nav className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link
-            href="/"
-            className="text-[var(--terminal-green)] hover:text-[var(--terminal-cyan)] transition-colors"
-          >
-            <span className="text-[var(--terminal-gray)]">{aboutData.username}@blog</span>
-            <span className="text-[var(--terminal-green)]">:</span>
-            <span className="text-[var(--terminal-cyan)]">~</span>
-            <span className="text-[var(--terminal-green)]">$</span>
-            <span className="cursor-blink ml-1">_</span>
-          </Link>
-          <div className="flex items-center gap-3 sm:gap-4 text-sm">
-            <Link
-              href="/"
-              className="text-[var(--terminal-gray)] hover:text-[var(--terminal-green)] transition-colors hidden sm:block"
-            >
-              [home]
-            </Link>
-            <Link
-              href="/blog"
-              className="text-[var(--terminal-gray)] hover:text-[var(--terminal-green)] transition-colors"
-            >
-              [blog]
-            </Link>
-            <Link
-              href="/about"
-              className="text-[var(--terminal-gray)] hover:text-[var(--terminal-green)] transition-colors hidden sm:block"
-            >
-              [about]
-            </Link>
-            <button
-              onClick={() => setSearchOpen(true)}
-              className="text-[var(--terminal-gray)] hover:text-[var(--terminal-green)] transition-colors flex items-center"
-              aria-label="Search"
-            >
-              <span>[/]</span>
-              <kbd className="hidden md:inline-block text-xs border border-[var(--terminal-border)] px-1 py-0.5 ml-1 text-[var(--terminal-gray)]">
-                ⌘K
-              </kbd>
-            </button>
-            <button
-              onClick={toggleTheme}
-              className="text-[var(--terminal-gray)] hover:text-[var(--terminal-yellow)] transition-colors"
-              aria-label="Toggle theme"
-            >
-              {mounted ? (theme === "dark" ? "[☀]" : "[☾]") : "[ ]"}
-            </button>
-          </div>
-        </nav>
-      </header>
+  const isCurrent = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
-      <Search
-        posts={searchPosts}
-        isOpen={searchOpen}
-        onClose={() => setSearchOpen(false)}
-      />
-    </>
+  return (
+    <header>
+      <div className="bars" aria-hidden="true">
+        <div className="bar-1">
+          <span>Wasath.x64_x86</span>
+          <span>blog</span>
+        </div>
+        <div className="stripe s2" />
+        <div className="stripe s3" />
+        <div className="stripe s4" />
+        <div className="stripe s5" />
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+        <Link href="/" className="inline-flex items-center min-h-11 text-sm no-underline" aria-label={`${aboutData.name}'s blog, home`}>
+          <span className="text-muted">{aboutData.username}@blog</span>
+          <span className="text-ok">:</span>
+          <span className="text-link">~</span>
+          <span className="text-ok">$</span>
+          <span className="cursor ml-1" aria-hidden="true">_</span>
+        </Link>
+
+        <div className="flex flex-wrap items-center gap-x-1 gap-y-1">
+          <nav aria-label="Primary">
+            <ul className="flex flex-wrap items-center" role="list">
+              {LINKS.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="navlink" aria-current={isCurrent(l.href) ? "page" : undefined}>
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <button type="button" className="btn" onClick={() => setSearchOpen(true)} aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K">
+            Search <span className="kbd hidden md:inline" aria-hidden="true">Ctrl K</span>
+          </button>
+          <DisplaySettings />
+        </div>
+      </div>
+
+      {searchOpen ? <Search posts={searchPosts} onClose={() => setSearchOpen(false)} /> : null}
+    </header>
   );
 }
